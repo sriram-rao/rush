@@ -2,6 +2,8 @@ import logging
 import threading
 import time
 
+import worker
+
 
 class Scheduler:
     def start(self):
@@ -16,5 +18,5 @@ class PeriodicScheduler(Scheduler):
     def start(self):
         while True:
             self.logger.info("Starting scheduler")
-            # run tasks
+            worker.work()
             time.sleep(5)
