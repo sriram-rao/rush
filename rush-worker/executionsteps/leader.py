@@ -1,9 +1,12 @@
-from domain.job import Job
+from jobs.job import Job
+from domain.pipelineManager import PipelineManager
 
 
 class Leader(Job):
+    pipelineManager = PipelineManager().get_instance()
 
     def run(self):
-        # Try to get leader baton
-        # if successful, execute leader tasks
-        pass
+        leader = Leader.pipelineManager.become_leader()
+        if not leader:
+            return
+        Leader.pipelineManager.run_leader_tasks()

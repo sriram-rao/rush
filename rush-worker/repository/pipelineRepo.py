@@ -1,4 +1,14 @@
+from enum import Enum
 from repository.sqlRepo import SqlRepo
+
+
+class Status(Enum):
+    WAITING = "Waiting",
+    READY = "Ready",
+    RUNNING = "Running",
+    COMPLETE = "Complete",
+    FAILED = "Failed",
+    STUCK = "Stuck"
 
 
 class PipelineRepo(SqlRepo):
@@ -13,5 +23,9 @@ class PipelineRepo(SqlRepo):
     def __init__(self):
         super().__init__()
 
+    def get_leader_baton(self) -> bool:
+        pass
+
     def get_pipelines(self):
         pass
+

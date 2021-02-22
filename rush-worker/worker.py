@@ -6,7 +6,7 @@ from executionsteps.getAllocatedJob import GetAllocatedJob
 from executionsteps.leader import Leader
 from executionsteps.runJob import RunJob
 
-steps = {Leader(), GetAllocatedJob(), RunJob(), CompleteJob()}
+steps = [Leader(), GetAllocatedJob(), RunJob(), CompleteJob()]
 
 context = threading.current_thread().__dict__
 logger = logging.getLogger(context["name"])

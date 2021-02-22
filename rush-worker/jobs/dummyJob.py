@@ -1,4 +1,4 @@
-from domain.job import Job
+from jobs.job import Job
 
 
 class DummyJob(Job):

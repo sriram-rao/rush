@@ -6,5 +6,6 @@ CREATE TABLE runningstate (
 	retry int,
 	status varchar(20), 
 	worker varchar(100), 
+	readytime TIMESTAMP, 
 	starttime TIMESTAMP, 
 	endtime TIMESTAMP);
