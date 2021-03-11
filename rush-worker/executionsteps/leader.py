@@ -3,7 +3,11 @@ from domain.pipelineManager import PipelineManager
 
 
 class Leader(Job):
-    pipelineManager = PipelineManager().get_instance()
+    pipelineManager = None
+
+    def __init__(self):
+        super().__init__()
+        Leader.pipelineManager = PipelineManager().get_instance()
 
     def run(self):
         leader = Leader.pipelineManager.become_leader()

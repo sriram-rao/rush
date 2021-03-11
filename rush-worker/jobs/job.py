@@ -1,11 +1,10 @@
 import logging
-import threading
+from threading import current_thread
 
 
 class Job:
     def __init__(self):
-        context = threading.current_thread().__dict__
-        self.logger = logging.getLogger(context["name"])
+        self.logger = logging.getLogger(current_thread().name)
 
     def run(self):
         pass

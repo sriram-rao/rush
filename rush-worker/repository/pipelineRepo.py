@@ -1,5 +1,8 @@
 from enum import Enum
+import os
 from repository.sqlRepo import SqlRepo
+
+INTERVAL = '2m'
 
 
 class Status(Enum):
@@ -24,7 +27,9 @@ class PipelineRepo(SqlRepo):
         super().__init__()
 
     def get_leader_baton(self) -> bool:
-        pass
+        command = f"UPDATE leaderbaton SET leader = '{os.uname()[1]}', " \
+                  f"endtime = NOW() + INTERVAL '{INTERVAL}' WHERE endtime < NOW();"
+        return self.execute(command) >= 1
 
     def get_pipelines(self):
         pass

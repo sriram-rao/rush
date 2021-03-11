@@ -1,4 +1,4 @@
-import threading
+from threading import current_thread
 import logging
 from repository.pipelineRepo import PipelineRepo
 
@@ -8,14 +8,13 @@ class PipelineManager:
     __instance = None
 
     @staticmethod
-    def get_instance(self):
+    def get_instance():
         if PipelineManager.__instance is None:
             PipelineManager.__instance = PipelineManager()
         return PipelineManager.__instance
 
     def __init__(self):
-        context = threading.current_thread().__dict__
-        logger = logging.getLogger(context["name"])
+        # logger = logging.getLogger(current_thread().name)
         if PipelineManager.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
