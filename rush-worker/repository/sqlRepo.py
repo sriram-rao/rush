@@ -5,14 +5,6 @@ import psycopg2
 
 
 class SqlRepo:
-    __instance = None
-
-    @staticmethod
-    def get_instance(self):
-        if SqlRepo.__instance is None:
-            SqlRepo.__instance = SqlRepo()
-        return SqlRepo.__instance
-
     def __init__(self):
         # logger = logging.getLogger(current_thread().name)
         self.connection = psycopg2.connect(
@@ -20,10 +12,6 @@ class SqlRepo:
             database="rushdb",
             user="sriramrao",
             password="")
-        if SqlRepo.__instance is not None:
-            raise Exception("This class is a singleton!")
-        else:
-            SqlRepo.__instance = self
 
     def fetch_entity(self, sql: string):
         cursor = self.connection.cursor()
