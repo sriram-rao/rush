@@ -1,4 +1,4 @@
-CREATE TABLE runningstate (
+CREATE TABLE run_state (
 	id SERIAL PRIMARY KEY, 
 	pipeline varchar(200), 
 	job varchar(200), 
@@ -8,4 +8,5 @@ CREATE TABLE runningstate (
 	worker varchar(100), 
 	readytime TIMESTAMP, 
 	starttime TIMESTAMP, 
-	endtime TIMESTAMP);
+	endtime TIMESTAMP,
+	message VARCHAR(1000));

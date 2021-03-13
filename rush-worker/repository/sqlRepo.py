@@ -1,6 +1,5 @@
-import logging
 import string
-from threading import current_thread
+
 import psycopg2
 
 
@@ -12,25 +11,51 @@ class SqlRepo:
             database="rushdb",
             user="sriramrao",
             password="")
+        self.cursor = None
 
     def fetch_entity(self, sql: string):
-        cursor = self.connection.cursor()
+        cursor = self.get_cursor()
         cursor.execute(sql)
         result = cursor.fetchone()
-        cursor.close()
+        self.complete_cursor(cursor)
         return result
 
     def fetch_entities(self, sql: string):
-        cursor = self.connection.cursor()
+        cursor = self.get_cursor()
         cursor.execute(sql)
         result = cursor.fetchall()
-        cursor.close()
+        self.complete_cursor(cursor)
         return result
 
     def execute(self, command: string) -> int:
-        cursor = self.connection.cursor()
+        cursor = self.get_cursor()
         cursor.execute(command)
         row_count = cursor.rowcount
-        self.connection.commit()
-        cursor.close()
+        if self.cursor is None:
+            self.connection.commit()
+        self.complete_cursor(cursor)
         return row_count
+
+    def begin_transaction(self):
+        self.cursor = self.connection.cursor()
+
+    def commit_transaction(self):
+        self.connection.commit()
+        self.cursor.close()
+        self.cursor = None
+
+    def rollback_transaction(self):
+        self.connection.rollback()
+        self.cursor.close()
+        self.cursor = None
+
+    def get_cursor(self):
+        if self.cursor is None:
+            return self.connection.cursor()
+        return self.cursor
+
+    def complete_cursor(self, cursor):
+        if self.cursor is not None:
+            return
+        cursor.close()
+

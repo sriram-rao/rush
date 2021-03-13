@@ -1,5 +1,5 @@
-from jobs.job import Job
 from domain.pipelineManager import PipelineManager
+from jobs.job import Job
 
 
 class Master(Job):
@@ -7,11 +7,10 @@ class Master(Job):
 
     def __init__(self):
         super().__init__()
-        Master.pipelineManager = PipelineManager().get_instance()
+        Master.pipelineManager = PipelineManager.get_instance()
 
     def run(self):
         PipelineManager.refresh()
-        Master.pipelineManager.ping()
         token = Master.pipelineManager.become_master()
         if not token:
             return

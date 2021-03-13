@@ -1,4 +1,5 @@
 CREATE TABLE worker (
-	name varchar(100), 
+	name VARCHAR(100), 
 	lastSeen TIMESTAMP,
-	state varchar(20));
+	status VARCHAR(20),
+	run_id INT);
