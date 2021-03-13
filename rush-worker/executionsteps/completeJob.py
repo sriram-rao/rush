@@ -1,9 +1,14 @@
+from domain.pipelineManager import PipelineManager
 from jobs.job import Job
+from threading import current_thread
 
 
 class CompleteJob(Job):
 
     def run(self):
-        # Update the job results to database
-        # Set last seen entry under my name in worker table
-        pass
+        manager = PipelineManager.get_instance()
+        run = current_thread().assigned_run
+        if run is None:
+            return
+        manager.update_run_status(run)
+        manager.free_worker(current_thread().worker)

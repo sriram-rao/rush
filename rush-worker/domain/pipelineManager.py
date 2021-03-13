@@ -4,7 +4,7 @@ from threading import current_thread
 import logging
 from repository.pipelineRepo import PipelineRepo
 from domain.pipeline import JobDefinition
-from domain.runState import RunState, Status
+from domain.runState import RunState, Status, Worker
 
 
 class PipelineManager:
@@ -39,7 +39,7 @@ class PipelineManager:
         self.process_complete_jobs()
         self.process_timed_out_jobs()
         self.process_failed_jobs()
-        self.initiate_jobs()
+        self.process_run_requests()
         self.process_waiting_jobs()
         self.assign_jobs_to_workers()
 
@@ -50,10 +50,21 @@ class PipelineManager:
     def process_complete_jobs(self):
         # for all complete jobs, move them to archive and (can be done later: ) trigger child jobs
         complete_jobs = PipelineManager.repository.get_runs_by_status(Status.COMPLETE)
+        new_runs = []
+        for run in complete_jobs:
+            pipeline = self.get_pipeline(run.pipeline)
+            job = self.get_job_definition(run.pipeline, run.job)
+            index = pipeline.jobs.index(job)
+            if index == len(pipeline.jobs) - 1:
+                continue
+            next_job = pipeline.jobs[index + 1]
+            new_runs.append(RunState().get_new_run(next_job))
         if not PipelineManager.repository.archive(complete_jobs):
             raise Exception('Archive failed!')
         if not PipelineManager.repository.remove_runs(complete_jobs):
             raise Exception('Remove runs failed!')
+        if not PipelineManager.repository.insert_runs(new_runs):
+            raise Exception('New runs failed')
 
     def process_timed_out_jobs(self):
         # for all running jobs, check if they are timed out. If they are, mark them failed
@@ -82,13 +93,13 @@ class PipelineManager:
         if not PipelineManager.repository.insert_runs(new_runs):
             raise Exception("Insert runs failed")
 
-    def initiate_jobs(self):
+    def process_run_requests(self):
         # check all pending trigger requests and add them as ready jobs in running state
-        requests = PipelineManager.repository.get_jobs_to_initiate()
-        new_runs = [request.initiate() for request in requests]
+        requests = PipelineManager.repository.get_run_requests()
+        new_runs = [request.get_run_state() for request in requests]
         if not PipelineManager.repository.insert_runs(new_runs) \
-                or not PipelineManager.repository.complete_initiation(requests):
-            raise Exception("Initiation crisis")
+                or not PipelineManager.repository.commit_run_request(requests):
+            raise Exception("Error in run requests")
 
     def assign_jobs_to_workers(self):
         # get the list of ready jobs and the list of available workers and assign one-to-one
@@ -96,15 +107,42 @@ class PipelineManager:
         free_workers = PipelineManager.repository.get_workers_by_status('Free')
         assigned_states = []
         assigned_workers = []
-        for i in range(0, len(free_workers)):
-            assigned_states.append(ready_jobs[i].assign[free_workers[i]])
-            assigned_workers.append(free_workers[i])
+        end_assignment = min(len(ready_jobs), len(free_workers))
+        for i in range(0, end_assignment):
+            assigned_states.append(ready_jobs[i].assign(free_workers[i]))
+            assigned_workers.append(free_workers[i].assign(ready_jobs[i]))
         PipelineManager.repository.update_statuses(assigned_states)
         PipelineManager.repository.update_worker_statuses(assigned_workers)
+
+    def get_pipeline(self, pipeline: str):
+        return PipelineManager.pipelines[pipeline]
 
     def get_job_definition(self, pipeline: str, job: str) -> JobDefinition:
         pipeline_definition = PipelineManager.pipelines[pipeline]
         return next(j for j in pipeline_definition.jobs if j.name == job)
+
+    def get_assigned_job(self, worker_name: str) -> RunState:
+        worker = PipelineManager.repository.get_worker(worker_name)
+        run = PipelineManager.repository.get_assigned_run(worker_name)
+        if run is None or worker.run_id != run.id:
+            if run is not None:
+                run.handle_worker_failure()
+                PipelineManager.repository.update_statuses([run])
+            worker.status = 'Free'
+            PipelineManager.repository.update_worker_statuses([worker])
+        return run
+
+    def update_run_status(self, run: RunState):
+        if run is None:
+            return
+        if not PipelineManager.repository.update_statuses([run]):
+            raise Exception("Couldn't update status")
+
+    def free_worker(self, worker_name: str):
+        worker = Worker()
+        worker.name = worker_name
+        if not PipelineManager.repository.update_worker_statuses([worker]):
+            raise Exception("Couldn't free worker")
 
     @staticmethod
     def refresh():
@@ -112,4 +150,4 @@ class PipelineManager:
                                      for pipeline in PipelineManager.repository.get_pipelines()}
         # all_pipelines = PipelineManager.repository.get_pipelines()
         # for pipeline in all_pipelines:
-        #     PipelineManager.pipelines[pipeline.name] = pipelinez`
+        #     PipelineManager.pipelines[pipeline.name] = pipeline

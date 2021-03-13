@@ -28,6 +28,8 @@ class RunState:
         self.ready_time = datetime.datetime.utcnow()
 
     def from_tuple(self, row: tuple):
+        if row is None:
+            return None
         self.id = row[0]
         self.pipeline = row[1]
         self.job = row[2]
@@ -38,8 +40,20 @@ class RunState:
         self.end_time = row[7]
         self.retry = row[8]
         self.ready_time = row[9]  # TODO: change to use string keys
+        return self
 
     def timeout(self):
+        self.status = Status.FAILED.value
+        self.end_time = datetime.datetime.utcnow()
+        return self
+
+    def assign(self, worker):
+        self.status = Status.RUNNING.value
+        self.worker = worker.name
+        self.start_time = datetime.datetime.utcnow()
+        return self
+
+    def handle_worker_failure(self):
         self.status = Status.FAILED.value
         self.end_time = datetime.datetime.utcnow()
 
@@ -53,18 +67,48 @@ class RunState:
         state.worker = ''
         return state
 
+    def get_new_run(self, job_definition: JobDefinition):
+        new_run = RunState()
+        new_run.pipeline = job_definition.pipeline
+        new_run.job = job_definition.name
+        return new_run
 
-class InitiateRequest:
+
+class RunRequest:
     def __init__(self, row: tuple):
+        if row is None:
+            return
         self.id = row[0]
         self.pipeline = row[1]
         self.job = row[2]
         self.job_instance = row[3]
         self.status = row[4]
 
-    def initiate(self) -> RunState:
+    def get_run_state(self) -> RunState:
         state = RunState()
         state.pipeline = self.pipeline
         state.job = self.job
         state.job_instance = self.job_instance
         return state
+
+
+class Worker:
+    def __init__(self):
+        self.name = ''
+        self.last_seen = datetime.datetime.utcnow()
+        self.status = 'Free'
+        self.run_id = -1
+
+    def from_tuple(self, row: tuple):
+        if row is None:
+            return None
+        self.name = row[0]
+        self.last_seen = row[1]
+        self.status = row[2]
+        self.run_id = row[3]
+        return self
+
+    def assign(self, run_state: RunState):
+        self.run_id = run_state.id
+        self.status = 'Busy'
+        return self

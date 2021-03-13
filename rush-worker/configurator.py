@@ -1,9 +1,11 @@
 import logging
+import os
 from threading import current_thread
 
 
 def configure():
     current_thread().name = "Main"
+    current_thread().worker = os.uname()[1]
     logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s %(levelname)s: %(message)s',
