@@ -19,7 +19,7 @@ class PipelineManager:
         return PipelineManager.__instance
 
     def __init__(self):
-        # logger = logging.getLogger(current_thread().name)
+        self.logger = logging.getLogger(current_thread().name)
         if PipelineManager.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
@@ -36,12 +36,18 @@ class PipelineManager:
 
     def run_master_tasks(self) -> None:
         # add scheduled jobs to trigger job1 -> job2
-        self.process_complete_jobs()
-        self.process_timed_out_jobs()
-        self.process_failed_jobs()
-        self.process_run_requests()
-        self.process_waiting_jobs()
-        self.assign_jobs_to_workers()
+        try:
+            PipelineManager.repository.begin_transaction()
+            self.process_complete_jobs()
+            self.process_timed_out_jobs()
+            self.process_failed_jobs()
+            self.process_run_requests()
+            self.process_waiting_jobs()
+            self.assign_jobs_to_workers()
+            PipelineManager.repository.commit_transaction()
+        except Exception as e:
+            self.logger.error(str(e))
+            PipelineManager.repository.rollback_transaction()
 
     def process_waiting_jobs(self):
         # for all waiting jobs if the ready time < current time, update status to ready
@@ -143,6 +149,10 @@ class PipelineManager:
         worker.name = worker_name
         if not PipelineManager.repository.update_worker_statuses([worker]):
             raise Exception("Couldn't free worker")
+
+    def get_parameters(self, pipeline: str, job: str) -> dict:
+        rows = PipelineManager.repository.get_parameters(pipeline, job)
+        return {row[0]: row[1] for row in rows}
 
     @staticmethod
     def refresh():

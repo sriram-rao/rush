@@ -22,13 +22,13 @@ class RunJob(Job):
             return
 
         job_definition = RunJob.pipelineManager.get_job_definition(run.pipeline, run.job)
+        params = RunJob.pipelineManager.get_parameters(run.pipeline, run.job)
         full_class_name = job_definition.class_name
         module_name = full_class_name.rsplit('.', 1)[0]
         class_name = full_class_name.rsplit('.', 1)[1]
-        job_class = getattr(importlib.import_module(module_name), class_name)
-        params = {}
-        job = job_class()
         try:
+            job_class = getattr(importlib.import_module(module_name), class_name)
+            job = job_class()
             job.initialise(params)
             job.run()
             run.status = Status.COMPLETE.value

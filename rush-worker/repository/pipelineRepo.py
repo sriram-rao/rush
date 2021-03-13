@@ -130,5 +130,9 @@ class PipelineRepo(SqlRepo):
         query = f"SELECT * FROM run_state WHERE worker = '{worker_name}';"
         return RunState().from_tuple(self.fetch_entity(query))
 
+    def get_parameters(self, pipeline: str, job: str):
+        query = f"SELECT key, value FROM job_parameter WHERE pipeline = '{pipeline}' AND job = '{job}'"
+        return self.fetch_entities(query)
+
     def get_default_if_none(self, time: datetime) -> str:
         return f"'{str(time)}'" if time is not None else 'NULL'
