@@ -1,6 +1,6 @@
 import logging
-import threading
 import time
+from threading import current_thread
 
 import worker
 
@@ -12,8 +12,7 @@ class Scheduler:
 
 class PeriodicScheduler(Scheduler):
     def __init__(self):
-        context = threading.current_thread().__dict__
-        self.logger = logging.getLogger(context["name"])
+        self.logger = logging.getLogger(current_thread().name)
 
     def start(self):
         while True:
