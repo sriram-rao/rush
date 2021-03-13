@@ -11,6 +11,7 @@ logger = logging.getLogger(current_thread().name)
 
 
 def work():
+
     logger.info("They call me the working man")
     for step in steps:
         step.run()

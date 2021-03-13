@@ -8,4 +8,6 @@ CREATE TABLE archive (
 	worker varchar(100), 
 	readytime TIMESTAMP, 
 	starttime TIMESTAMP, 
-	endtime TIMESTAMP);
+	endtime TIMESTAMP,
+	message varchar(1000)
+);
