@@ -1,18 +1,16 @@
 import datetime
-from enum import Enum
 import os
 
-from typing import List
-
+from domain.pipeline import Pipeline
 from domain.runState import RunState, Status, RunRequest, Worker
 from repository.sqlRepo import SqlRepo
-from domain.pipeline import JobDefinition, Pipeline
 
 INTERVAL = '2m'
+
+
 # TODO ADD CONFIG.ini functionality.
 
 class PipelineRepo(SqlRepo):
-
     __instance = None
 
     @staticmethod
@@ -44,7 +42,8 @@ class PipelineRepo(SqlRepo):
         self.execute(command)
 
     def get_runs_by_status(self, status: Status) -> [RunState]:
-        query = f"SELECT * FROM run_state WHERE status = '{status.value}';"
+        query = f"SELECT id, pipeline, job, jobinstance, status, worker, starttime, endtime, retry, readytime, message " \
+                f"FROM run_state WHERE status = '{status.value}';"
         rows = self.fetch_entities(query)
         return [RunState().from_tuple(row) for row in rows]
 
@@ -111,7 +110,7 @@ class PipelineRepo(SqlRepo):
         return self.execute(command) == 1
 
     def get_workers_by_status(self, status: str):
-        query = f"SELECT * FROM worker WHERE status = '{status}'"
+        query = f"SELECT name, lastseen, status, run_id FROM worker WHERE status = '{status}'"
         rows = self.fetch_entities(query)
         return [Worker().from_tuple(worker) for worker in rows]
 
@@ -123,11 +122,12 @@ class PipelineRepo(SqlRepo):
         return self.execute(command) == len(workers)
 
     def get_worker(self, worker_name: str):
-        query = f"SELECT * FROM worker WHERE name = '{worker_name}';"
+        query = f"SELECT name, lastseen, status, run_id FROM worker WHERE name = '{worker_name}';"
         return Worker().from_tuple(self.fetch_entity(query))
 
     def get_assigned_run(self, worker_name: str) -> RunState:
-        query = f"SELECT * FROM run_state WHERE worker = '{worker_name}';"
+        query = f"SELECT id, pipeline, job, jobinstance, status, worker, starttime, endtime, retry, readytime, message " \
+                f"FROM run_state WHERE worker = '{worker_name}';"
         return RunState().from_tuple(self.fetch_entity(query))
 
     def get_parameters(self, pipeline: str, job: str):

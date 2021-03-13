@@ -1,11 +1,10 @@
 import datetime
+import importlib
+from threading import current_thread
 
 from domain.pipelineManager import PipelineManager
-import importlib
-
 from domain.runState import Status
 from jobs.job import Job
-from threading import current_thread
 
 
 class RunJob(Job):

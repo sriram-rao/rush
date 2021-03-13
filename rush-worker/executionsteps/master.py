@@ -1,5 +1,5 @@
-from jobs.job import Job
 from domain.pipelineManager import PipelineManager
+from jobs.job import Job
 
 
 class Master(Job):

@@ -1,6 +1,5 @@
-import logging
 import string
-from threading import current_thread
+
 import psycopg2
 
 

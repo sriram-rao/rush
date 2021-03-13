@@ -1,10 +1,11 @@
 import datetime
+import logging
 import os
 from threading import current_thread
-import logging
-from repository.pipelineRepo import PipelineRepo
+
 from domain.pipeline import JobDefinition
 from domain.runState import RunState, Status, Worker
+from repository.pipelineRepo import PipelineRepo
 
 
 class PipelineManager:

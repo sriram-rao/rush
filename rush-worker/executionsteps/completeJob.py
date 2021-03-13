@@ -1,6 +1,7 @@
+from threading import current_thread
+
 from domain.pipelineManager import PipelineManager
 from jobs.job import Job
-from threading import current_thread
 
 
 class CompleteJob(Job):
