@@ -1,9 +1,11 @@
 import datetime
 import os
+from threading import current_thread
 
 from domain.pipeline import Pipeline
 from domain.runState import RunState, Status, RunRequest, Worker
 from repository.sqlRepo import SqlRepo
+
 
 INTERVAL = '2m'
 
@@ -27,7 +29,7 @@ class PipelineRepo(SqlRepo):
             PipelineRepo.__instance = self
 
     def get_master_token(self) -> bool:
-        command = f"UPDATE master_token SET master = '{os.uname()[1]}', endtime = NOW() AT TIME ZONE 'utc' " \
+        command = f"UPDATE master_token SET master = '{current_thread().worker}', endtime = NOW() AT TIME ZONE 'utc' " \
                   f"+ INTERVAL '{INTERVAL}' WHERE endtime < NOW() AT TIME ZONE 'utc';"
         return self.execute(command) >= 1
 
