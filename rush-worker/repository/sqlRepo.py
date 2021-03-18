@@ -10,7 +10,7 @@ class SqlRepo:
             host="localhost",
             database="rushdb",
             user="postgres",
-            password="postgres")
+            password="1111")
         self.cursor = None
 
     def fetch_entity(self, sql: string):
