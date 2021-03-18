@@ -1,4 +1,8 @@
+*/.idea/*
 .idea/*
 */venv/*
 .DS_Store
 rush-worker/logs/*
+venv/*
+*__pycache__*
+*.pyc

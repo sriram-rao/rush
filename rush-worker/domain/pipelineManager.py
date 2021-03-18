@@ -27,7 +27,7 @@ class PipelineManager:
             PipelineManager.__instance = self
 
     def ping(self):
-        worker = os.uname()[1]
+        worker = current_thread().worker
         if not PipelineManager.repository.worker_exists(worker):
             PipelineManager.repository.add_worker(worker)
         PipelineManager.repository.update_last_seen(worker)

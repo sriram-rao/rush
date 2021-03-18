@@ -117,7 +117,7 @@ class PipelineRepo(SqlRepo):
     def update_worker_statuses(self, workers: [Worker]):
         if len(workers) == 0:
             return True
-        command = ";".join(f"UPDATE worker SET status = '{w.status}', run_id = {w.run_id} "
+        command = ";".join(f"UPDATE worker SET status = '{w.status}', run_id = {w.run_id if w.run_id is not None else 'NULL'} "
                            f"WHERE name = '{w.name}'" for w in workers)
         return self.execute(command) == len(workers)
 
