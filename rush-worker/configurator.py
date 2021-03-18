@@ -3,9 +3,9 @@ import os
 from threading import current_thread
 
 
-def configure():
+def configure(worker_name: str):
     current_thread().name = "Main"
-    current_thread().worker = os.uname()[1]
+    current_thread().worker = os.uname()[1] + '-' + worker_name
     logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s %(levelname)s: %(message)s',

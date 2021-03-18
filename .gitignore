@@ -4,3 +4,5 @@
 .DS_Store
 rush-worker/logs/*
 venv/*
+*__pycache__*
+*.pyc
