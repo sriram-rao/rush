@@ -16,6 +16,5 @@ class PeriodicScheduler(Scheduler):
 
     def start(self):
         while True:
-            self.logger.info("Starting scheduler")
             worker.work()
             time.sleep(5)
