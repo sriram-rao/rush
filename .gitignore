@@ -2,3 +2,5 @@
 */venv/*
 .DS_Store
 rush-worker/logs/*
+*__pycache__*
+*.pyc
