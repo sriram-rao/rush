@@ -9,8 +9,8 @@ class SqlRepo:
         self.connection = psycopg2.connect(
             host="localhost",
             database="rushdb",
-            user="postgres",
-            password="1111")
+            user="sriramrao",
+            password="")
         self.cursor = None
 
     def fetch_entity(self, sql: string):

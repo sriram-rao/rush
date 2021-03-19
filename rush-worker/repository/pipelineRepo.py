@@ -127,7 +127,7 @@ class PipelineRepo(SqlRepo):
 
     def get_assigned_run(self, worker_name: str) -> RunState:
         query = f"SELECT id, pipeline, job, jobinstance, status, worker, starttime, endtime, retry, readytime, message " \
-                f"FROM run_state WHERE worker = '{worker_name}';"
+                f"FROM run_state WHERE worker = '{worker_name}' AND status = '{Status.RUNNING.value}';"
         return RunState().from_tuple(self.fetch_entity(query))
 
     def get_parameters(self, pipeline: str, job: str):
