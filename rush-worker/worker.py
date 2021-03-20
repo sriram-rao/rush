@@ -1,10 +1,10 @@
 import logging
 from threading import current_thread
 
-from executionsteps.completeJob import CompleteJob
-from executionsteps.getAllocatedJob import GetAllocatedJob
+from executionsteps.complete_job import CompleteJob
+from executionsteps.get_allocated_job import GetAllocatedJob
 from executionsteps.master import Master
-from executionsteps.runJob import RunJob
+from executionsteps.run_job import RunJob
 
 steps = [Master(), GetAllocatedJob(), RunJob(), CompleteJob()]
 logger = logging.getLogger(current_thread().name)

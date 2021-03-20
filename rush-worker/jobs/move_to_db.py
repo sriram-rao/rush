@@ -1,9 +1,7 @@
-import sys
 from jobs.job import Job
 
 
-
-class movetoDB(Job):
+class MoveToDB(Job):
     def run(self):
         output_file = self.params.get("output_file")
         name = self.params.get("analysis_name")
@@ -18,5 +16,3 @@ class movetoDB(Job):
         command.rstrip(",")
         command += ";"
         self.logger.info(command)
-
-

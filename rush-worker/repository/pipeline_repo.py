@@ -2,8 +2,8 @@ import datetime
 import os
 
 from domain.pipeline import Pipeline
-from domain.runState import RunState, Status, RunRequest, Worker
-from repository.sqlRepo import SqlRepo
+from domain.state import RunState, Status, RunRequest, Worker
+from repository.sql_repo import SqlRepo
 
 INTERVAL = '2m'
 
