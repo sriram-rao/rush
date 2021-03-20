@@ -1,17 +1,11 @@
-from domain.pipelineManager import PipelineManager
-from jobs.job import Job
+from domain.pipeline_manager import PipelineManager
+from executionsteps.step import Step
 
 
-class Master(Job):
-    pipelineManager = None
-
-    def __init__(self):
-        super().__init__()
-        Master.pipelineManager = PipelineManager.get_instance()
-
+class Master(Step):
     def run(self):
         PipelineManager.refresh()
-        token = Master.pipelineManager.become_master()
+        token = Master.pipeline_manager.become_master()
         if not token:
             return
-        Master.pipelineManager.run_master_tasks()
+        Master.pipeline_manager.run_master_tasks()
