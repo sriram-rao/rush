@@ -4,7 +4,7 @@ A pipeline execution system named after [these musical geniuses](https://www.rus
 ### Defining a pipeline
 Pipelines are a combination of sub-tasks referred to as "jobs". Each job (or sub-task) may have settings or parameters as well. 
 
-Pipelines are defined in JSON. Here is an example pipeline JSON:
+Pipelines are defined in JSON. Here is an example:
 ```
 {
   "jobs": [
