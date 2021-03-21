@@ -9,5 +9,5 @@ def configure(worker_name: str):
     logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s %(levelname)s: %(message)s',
-            handlers=[logging.FileHandler("logs/debug.log"), logging.StreamHandler()]
+            handlers=[logging.FileHandler(f"logs/{worker_name}.log"), logging.StreamHandler()]
         )
