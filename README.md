@@ -1,5 +1,5 @@
 # Rush
-A pipeline execution system named after [these musical geniuses](https://www.rush.com).
+A pipeline execution system named after [Rush](https://www.rush.com).
 
 ### Defining a pipeline
 Pipelines are a combination of sub-tasks referred to as "jobs". Each job (or sub-task) may have settings or parameters as well. 
