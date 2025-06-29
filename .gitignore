@@ -6,3 +6,5 @@ rush-worker/logs/*
 venv/*
 *__pycache__*
 *.pyc
+*nvim_silencio.json
+*basedpyrightconfig.json
