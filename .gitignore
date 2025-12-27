@@ -1,8 +1,12 @@
+.avante*
 */.idea/*
 .idea/*
 */venv/*
 .DS_Store
 rush-worker/logs/*
 venv/*
+target/
 *__pycache__*
 *.pyc
+*nvim_silencio.json
+*basedpyrightconfig.json
