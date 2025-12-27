@@ -281,3 +281,7 @@ python main.py worker3
 
 One worker will become the master and coordinate job assignments.
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
