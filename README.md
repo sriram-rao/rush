@@ -281,10 +281,3 @@ python main.py worker3
 
 One worker will become the master and coordinate job assignments.
 
-## License
-
-This project does not currently specify a license.
-
-## Contributing
-
-This appears to be a personal/educational project. Contact the repository owner for contribution guidelines.
