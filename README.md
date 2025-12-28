@@ -8,7 +8,7 @@ Rush is a Python-based distributed job execution framework that manages complex 
 
 ## Architecture
 
-| ![Rush Architecturn](resource/rush.pdf) |
+| ![Rush Architecture](resource/rush.jpg) |
 | :-------------------------------------: |
 
 ### Key Components
