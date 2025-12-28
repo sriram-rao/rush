@@ -8,18 +8,7 @@ Rush is a Python-based distributed job execution framework that manages complex 
 
 ## Architecture
 
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Worker 1  │     │   Worker 2  │     │   Worker N  │
-└──────┬──────┘     └──────┬──────┘     └──────┬──────┘
-       │                   │                   │
-       └───────────────────┴───────────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  PostgreSQL │
-                    │   Database  │
-                    └─────────────┘
-```
+![Rush Architecture](resource/rush.png)
 
 ### Key Components
 
