@@ -8,8 +8,8 @@ Rush is a Python-based distributed job execution framework that manages complex 
 
 ## Architecture
 
-| ![Rush Architecturn](resource/rush.png) |
-| :------------: |
+| ![Rush Architecturn](resource/rush.pdf) |
+| :-------------------------------------: |
 
 ### Key Components
 
@@ -76,11 +76,13 @@ rush/
 ### Setup
 
 1. **Clone the repository**
+
    ```bash
    cd rush
    ```
 
 2. **Install dependencies**
+
    ```bash
    cd rush-worker
    pip install -r requirements.txt
@@ -89,11 +91,13 @@ rush/
 3. **Setup the database**
 
    Create a PostgreSQL database:
+
    ```bash
    createdb rushdb
    ```
 
    Run the schema scripts:
+
    ```bash
    cd rush-db
    psql -d rushdb -f pipeline.sql
@@ -108,6 +112,7 @@ rush/
 4. **Configure database connection**
 
    Update `rush-worker/repository/sql_repo.py` with your database credentials:
+
    ```python
    self.connection = psycopg2.connect(
        host="localhost",
@@ -127,6 +132,7 @@ python main.py <worker_name>
 ```
 
 Example:
+
 ```bash
 python main.py worker1
 ```
@@ -274,4 +280,3 @@ One worker will become the master and coordinate job assignments.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
